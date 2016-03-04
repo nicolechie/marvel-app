@@ -2,16 +2,41 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<title></title>
+	<link href='https://fonts.googleapis.com/css?family=Bangers|Happy+Monkey' rel='stylesheet' type='text/css'>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+	<link rel="stylesheet" href="css/style.css">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
 </head>
-<body>
-	<form id = 'search-term'>
-				<input type="text" name="userGuess" id="query" class="text" autocomplete="off"/>
-      			<input type="submit" id="guessButton" class="button" name="submit"/>
-	</form>
-	<ul id = "search-results">
-	</ul>
-	<script src="http://code.jquery.com/jquery.min.js"></script>
-	<script src="js/app.js"></script>
-</body>
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top ">
+      <div class="container-fluid">
+        <ul class="nav navbar-nav">
+          <li><a class="what" href="#">What ?</a></li>
+        </ul>
+      </div><!-- /.container-fluid -->
+    </nav>
+
+   <!-- Modal Information Box -->
+		<div class="overlay" id="modal">
+			<div class="content">
+        <h2 class = 'yellow'>What do I do?
+        </h2>
+				<div>
+          <p class = 'question'>Directions: </p>
+          <p class = 'question'>So, Are you ready?</p>
+          <a class="btn btn-default gotIt" href="#" role="button">Got it!</a>
+				</div>
+			</div>
+		</div>
+   
+    <div class="container-fluid">
+      <div class="row" id = "characters">
+        <div class="col-lg-2 col-md-3 col-sm-4 col-xs-6 box"><img src='http://i.annihil.us/u/prod/marvel/i/mg/3/50/526548a343e4b/standard_fantastic.jpg'>
+        </div>
+      </div>
+    </div>
+    <script src="http://code.jquery.com/jquery.min.js"></script>
+	 <script src="js/app.js"></script>
+  </body>
 </html>
