@@ -1,15 +1,19 @@
 $(document).ready(function() {
 	var characters = {};
+	var boxCount = 0;
 	$('.results').hide();
+	$('.directions').hide();
 	/*--- Display information modal box ---*/
 	$(".what").click(function(){
 		$('.results').hide();
+		$('.directions').show();
     	$(".overlay").fadeIn(1000);
   	});
 
   	/*--- Hide information modal box ---*/
   	$("a.gotIt").click(function(){
   		$(".overlay").fadeOut(1000);
+  		$('.directions').fadeOut(1000);
   	});
   
     characterGetRequest();
@@ -23,12 +27,13 @@ $(document).ready(function() {
 			var lastChars = imgPath.substr(imgPath.length - 19);
 			var characterName = results[i].name;
 			var characterThumbnail = results[i].thumbnail.path + '/standard_fantastic' + '.' + results[i].thumbnail.extension;
-
+			var characterThumbnailSmall = results[i].thumbnail.path + '/standard_medium' + '.' + results[i].thumbnail.extension;
 			var characterId = results[i].id;
 			characters[characterId] = {
 				name: characterName,
 			 	id: characterId,
 			 	thumbnail: characterThumbnail,
+			 	thumbnailSmall: characterThumbnailSmall,
 			 	count: null
 			}
 		
@@ -41,7 +46,6 @@ $(document).ready(function() {
 			// comicGetRequest(characterId);
     	}
     }
-  
 	function characterGetRequest() {
 	// the parameters we need to pass in our request to StackOverflow's API
 	var request = { 
@@ -56,17 +60,27 @@ $(document).ready(function() {
 	})
 		.done(function(data){ //this waits for the ajax to return with a succesful promise object
 		    showResults(data.data.results);
+		    var boxCount = 0;
 		    $(".box").click(function() {
 		    	var characterId = $(this).attr("value");
-      			$(this).toggleClass("selected");
-      			$(".overlay").fadeIn(1000);
-      			if (characters[characterId].count === null) {
+      				if (characters[characterId].count === null) {
       				comicGetRequest(characterId);
-      			}
-      			else {
+      				}
+      				else {
       				showTotals(characterId);
+      				}
+		    	if (boxCount === 1) {
+		    		$(".overlay").fadeIn(1000);
+		    		$("a.gotIt").click(function(){
+  						$(".overlay").fadeOut(1000);
+  						boxCount = 0;
+  						$('.results').html('');
+  					});
+		    	}
+		    	else {
+			    	$(this).toggleClass("selected");
+			    	boxCount+=1;
       			}
-      			
     		});
 		  
 		})
@@ -76,7 +90,7 @@ $(document).ready(function() {
 	});
 };
 function showTotals(characterId) {
-	$('.results').html(characters[characterId].name + ': ' + characters[characterId].count);
+	$('.results').append('<img src=' + characters[characterId].thumbnailSmall + '><p>' + characters[characterId].name + ': ' + characters[characterId].count) + '</p>';
 	$('.results').show();
 }
 function comicGetRequest(characterId) {
