@@ -1,6 +1,9 @@
 $(document).ready(function() {
+	var characters = {};
+	$('.results').hide();
 	/*--- Display information modal box ---*/
 	$(".what").click(function(){
+		$('.results').hide();
     	$(".overlay").fadeIn(1000);
   	});
 
@@ -13,26 +16,32 @@ $(document).ready(function() {
             
 });
 
-	function getId(results) {
-		for (var i = 0; i < results.length; i++) {
-			var characterId = results[i].id;
-    	}
-    	return characterId;	
-    }
     function showResults(results) {
-		console.log(results);
+		// console.log(results);
 		for (var i = 0; i < results.length; i++) {
 			var imgPath = results[i].thumbnail.path;
-			var last = imgPath.substr(imgPath.length - 19);
-			
-			if(last !== 'image_not_available') {
-				 var characterThumbnail = results[i].thumbnail.path + '/standard_fantastic' + '.' + results[i].thumbnail.extension;
-	            $('#characters').append("<div class='col-lg-2 col-md-3 col-sm-4 col-xs-6 box'><img src=" + characterThumbnail + "></div>");
-	    		var characterId = results[i].id;
-	    		comicGetRequest(characterId);
+			var lastChars = imgPath.substr(imgPath.length - 19);
+			var characterName = results[i].name;
+			var characterThumbnail = results[i].thumbnail.path + '/standard_fantastic' + '.' + results[i].thumbnail.extension;
+
+			var characterId = results[i].id;
+			characters[characterId] = {
+				name: characterName,
+			 	id: characterId,
+			 	thumbnail: characterThumbnail,
+			 	count: null
 			}
+		
+	
+			if(lastChars !== 'image_not_available') {
+	            $('#characters').append("<div class='col-lg-2 col-md-3 col-sm-4 col-xs-6 box' value = " + characterId + "><img src=" + characterThumbnail + "></div>");
+			}
+	
+
+			// comicGetRequest(characterId);
     	}
     }
+  
 	function characterGetRequest() {
 	// the parameters we need to pass in our request to StackOverflow's API
 	var request = { 
@@ -48,17 +57,28 @@ $(document).ready(function() {
 		.done(function(data){ //this waits for the ajax to return with a succesful promise object
 		    showResults(data.data.results);
 		    $(".box").click(function() {
+		    	var characterId = $(this).attr("value");
       			$(this).toggleClass("selected");
       			$(".overlay").fadeIn(1000);
+      			if (characters[characterId].count === null) {
+      				comicGetRequest(characterId);
+      			}
+      			else {
+      				showTotals(characterId);
+      			}
+      			
     		});
-		    // getId(data.data.results);
-		    // comicGetRequest();
+		  
 		})
 		.fail(function(jqXHR, error){ //this waits for the ajax to return with an error promise object
 		// var errorElem = showError(error);
 		// $('.search-results').append(errorElem);
 	});
 };
+function showTotals(characterId) {
+	$('.results').html(characters[characterId].name + ': ' + characters[characterId].count);
+	$('.results').show();
+}
 function comicGetRequest(characterId) {
 
 	var request = { 
@@ -72,8 +92,8 @@ function comicGetRequest(characterId) {
 		type: "GET"
 	})
 		.done(function(data){
-		    // console.log(data);
-		 
+			characters[characterId].count = data.data.total
+			showTotals(characterId);
 		})
 		.fail(function(jqXHR, error){ //this waits for the ajax to return with an error promise object
 		// var errorElem = showError(error);

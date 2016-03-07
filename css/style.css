@@ -88,3 +88,6 @@ nav:hover {
 .selected {
   opacity: 1;
 }
+.hidden {
+  display: none;
+}
