@@ -14,6 +14,7 @@ $(document).ready(function() {
   	$("a.gotIt").click(function(){
   		$(".overlay").fadeOut(1000);
   		$('.directions').fadeOut(1000);
+  		$('#characterComparison').html('');
   	});
   
     characterGetRequest();
@@ -88,7 +89,7 @@ $(document).ready(function() {
 		    		$("a.gotIt").click(function(){
   						$(".overlay").fadeOut(1000);
   						boxCount = 0;
-  						$('.results div').html('');
+  						$('#characterComparison').html('');
   					});
 		    	}
 		    	else {
@@ -104,7 +105,7 @@ $(document).ready(function() {
 	});
 };
 function showTotals(characterId) {
-	$('.results').append('<img src=' + characters[characterId].thumbnailSmall + '><p>' + characters[characterId].name + ': <span id="countOne" value=' + characterId + '>' + characters[characterId].count + '</span></p>');
+	$('#characterComparison').append('<img src=' + characters[characterId].thumbnailSmall + '><p>' + characters[characterId].name + ': <span id="countOne" value=' + characterId + '>' + characters[characterId].count + '</span></p>');
 	$('.results').show();
 }
 function comicGetRequest(characterId) {
@@ -122,9 +123,7 @@ function comicGetRequest(characterId) {
 		.done(function(data){
 			characters[characterId].count = data.data.total
 			showTotals(characterId);
-				console.log(characters[characterId].count);
-		    		console.log(characters[$('#countOne').attr("value")].count);
-		    		compareTotals(characterId);
+		    compareTotals(characterId);
 		})
 		.fail(function(jqXHR, error){ //this waits for the ajax to return with an error promise object
 		// var errorElem = showError(error);
