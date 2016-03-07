@@ -46,6 +46,19 @@ $(document).ready(function() {
 			// comicGetRequest(characterId);
     	}
     }
+      function compareTotals(characterId) {
+    	if (characters[characterId].count > characters[$('#countOne').attr("value")].count) {
+    		$('#winner').html(characters[characterId].name + ' is the winner!');
+    	}
+    	else if (characters[characterId].count === characters[$('#countOne').attr("value")].count) {
+    		$('#winner').html('It is a tie!');
+    	}
+    	else {
+    		$('#winner').html(characters[$('#countOne').attr("value")].name + ' is the winner!');
+    	}
+    	
+    }
+   
 	function characterGetRequest() {
 	// the parameters we need to pass in our request to StackOverflow's API
 	var request = { 
@@ -68,13 +81,14 @@ $(document).ready(function() {
       				}
       				else {
       				showTotals(characterId);
+		    		compareTotals(characterId);
       				}
 		    	if (boxCount === 1) {
 		    		$(".overlay").fadeIn(1000);
 		    		$("a.gotIt").click(function(){
   						$(".overlay").fadeOut(1000);
   						boxCount = 0;
-  						$('.results').html('');
+  						$('.results div').html('');
   					});
 		    	}
 		    	else {
@@ -90,7 +104,7 @@ $(document).ready(function() {
 	});
 };
 function showTotals(characterId) {
-	$('.results').append('<img src=' + characters[characterId].thumbnailSmall + '><p>' + characters[characterId].name + ': ' + characters[characterId].count) + '</p>';
+	$('.results').append('<img src=' + characters[characterId].thumbnailSmall + '><p>' + characters[characterId].name + ': <span id="countOne" value=' + characterId + '>' + characters[characterId].count + '</span></p>');
 	$('.results').show();
 }
 function comicGetRequest(characterId) {
@@ -108,6 +122,9 @@ function comicGetRequest(characterId) {
 		.done(function(data){
 			characters[characterId].count = data.data.total
 			showTotals(characterId);
+				console.log(characters[characterId].count);
+		    		console.log(characters[$('#countOne').attr("value")].count);
+		    		compareTotals(characterId);
 		})
 		.fail(function(jqXHR, error){ //this waits for the ajax to return with an error promise object
 		// var errorElem = showError(error);
